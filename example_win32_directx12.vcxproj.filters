@@ -10,12 +10,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorUtils.h" />
-    <ClInclude Include="..\..\..\imgui-docking\backends\imgui_impl_dx12.h">
-      <Filter>sources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\imgui-docking\backends\imgui_impl_win32.h">
-      <Filter>sources</Filter>
-    </ClInclude>
     <ClInclude Include="imconfig.h">
       <Filter>imgui</Filter>
     </ClInclude>
@@ -34,18 +28,18 @@
     <ClInclude Include="imstb_truetype.h">
       <Filter>imgui</Filter>
     </ClInclude>
+    <ClInclude Include="backends\imgui_impl_win32.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="backends\imgui_impl_dx12.h">
+      <Filter>sources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>sources</Filter>
     </ClCompile>
     <ClCompile Include="ColorUtils.cpp" />
-    <ClCompile Include="..\..\..\imgui-docking\backends\imgui_impl_dx12.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\imgui-docking\backends\imgui_impl_win32.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
     <ClCompile Include="imgui.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
@@ -60,6 +54,12 @@
     </ClCompile>
     <ClCompile Include="imgui_widgets.cpp">
       <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="backends\imgui_impl_win32.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="backends\imgui_impl_dx12.cpp">
+      <Filter>sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
