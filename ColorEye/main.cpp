@@ -9,8 +9,11 @@
 #include <imgui/imgui_impl_opengl3.h>
 #include <imgui/imgui_stdlib.h>
 
-int width = 1280;
-int height = 720;
+#include "GUI.h"
+#include "ColorUtils.h"
+#include "Utils.h"
+
+using namespace GUI;
 
 int main()
 {
@@ -21,7 +24,7 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* window = glfwCreateWindow(width, height, "Principia", NULL, NULL);
+	window  = glfwCreateWindow(windowWidth, windowHeight, "ColorEye", NULL, NULL);
 	// Error check if the window fails to create
 	if (window == NULL)
 	{
@@ -33,20 +36,21 @@ int main()
 	glfwMakeContextCurrent(window);
 
 	glewInit();
-	glViewport(0, 0, width, height);
+	glViewport(0, 0, windowWidth, windowHeight);
 
 	ImInit::ImGuiInit(window);
 
-	while (!glfwWindowShouldClose(window))
-	{
+    while (!glfwWindowShouldClose(window)) {
+        glfwPollEvents();
+
+		ImInit::StartImGuiFrame();
+
+		GUI::MainWindow();
+
 		GUI::Render();
+    }
 
-		glfwSwapBuffers(window);
-		glfwPollEvents();
-	}
-
-	glfwDestroyWindow(window);
-	glfwTerminate();
+	ImInit::CleanUp();
 
 	return 0;
 }
