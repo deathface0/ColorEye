@@ -23,6 +23,7 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
 	window  = glfwCreateWindow(windowWidth, windowHeight, "ColorEye", NULL, NULL);
 	// Error check if the window fails to create
@@ -39,6 +40,11 @@ int main()
 	glViewport(0, 0, windowWidth, windowHeight);
 
 	ImInit::ImGuiInit(window);
+
+	Utils::generateTexture("Images/clipboard.png", Texture::clipboard);
+	
+	Font::OpenSans::px20 = ImGui::GetIO().Fonts->AddFontFromFileTTF("Fonts/OpenSans-Variable.ttf", 20);
+	Font::OpenSans::px20 = ImGui::GetIO().Fonts->AddFontFromFileTTF("Fonts/OpenSans-Variable.ttf", 30);
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();

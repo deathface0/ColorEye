@@ -1,6 +1,6 @@
 #include "ColorUtils.h"
 
-ImVec4 ColorUtils::getCurrentPixelColor()
+Vec3<int> ColorUtils::getCurrentPixelColor()
 {
     // Get the device context of the entire screen
     HDC hdcScreen = GetDC(NULL);
@@ -20,10 +20,10 @@ ImVec4 ColorUtils::getCurrentPixelColor()
     int green = GetGValue(color);
     int blue = GetBValue(color);
 
-    return ImVec4(red, green, blue, 255);
+    return Vec3(red, green, blue);
 }
 
-ImVec4 ColorUtils::getPixelColor(int x, int y)
+Vec3<int> ColorUtils::getPixelColor(int x, int y)
 {
     // Get the device context of the entire screen
     HDC hdcScreen = GetDC(NULL);
@@ -39,20 +39,20 @@ ImVec4 ColorUtils::getPixelColor(int x, int y)
     int green = GetGValue(color);
     int blue = GetBValue(color);
 
-    return ImVec4(red, green, blue, 255);
+    return Vec3(red, green, blue);
 }
 
-ImVec4 ColorUtils::ImVec4To255(const ImVec4& color)
+Vec3<int> ColorUtils::rgb01To255(const Vec3<float>& color)
 {
-    return ImVec4(color.x * 255, color.y * 255, color.z * 255, color.w * 255);
+    return Vec3<int>(color.x * 255, color.y * 255, color.z * 255);
 }
 
-ImVec4 ColorUtils::ImVec4To01(const ImVec4& color)
+Vec3<float> ColorUtils::rgb255To01(const Vec3<int>& color)
 {
-    return ImVec4(color.x / 255.0f, color.y / 255.0f, color.z / 255.0f, color.w / 255.0f);
+    return Vec3<float>(color.x / 255.0f, color.y / 255.0f, color.z / 255.0f);
 }
 
-std::string ColorUtils::ImVec4ToHex(const ImVec4& color)
+std::string ColorUtils::rgb01ToHex(const Vec3<float>& color)
 {
     unsigned char r = static_cast<unsigned char>(color.x * 255.0f);
     unsigned char g = static_cast<unsigned char>(color.y * 255.0f);
@@ -63,7 +63,18 @@ std::string ColorUtils::ImVec4ToHex(const ImVec4& color)
     return std::string(hex);
 }
 
-HSV ColorUtils::RGBtoHSV(float r, float g, float b)
+std::string ColorUtils::rgb255ToHex(const Vec3<int>& color)
+{
+    unsigned char r = static_cast<unsigned char>(color.x);
+    unsigned char g = static_cast<unsigned char>(color.y);
+    unsigned char b = static_cast<unsigned char>(color.z);
+
+    char hex[8];
+    snprintf(hex, sizeof(hex), "#%02X%02X%02X", r, g, b);
+    return std::string(hex);
+}
+
+HSV ColorUtils::rgb255toHSV(float r, float g, float b)
 {
     HSV hsv;
 
@@ -97,12 +108,6 @@ HSV ColorUtils::RGBtoHSV(float r, float g, float b)
     hsv.v = maxVal;
 
     return hsv;
-}
-
-std::string ColorUtils::ImVec4ToString(const ImVec4& color)
-{
-    std::string str_color = "{" + std::to_string(color.x) + "," + std::to_string(color.y) + "," + std::to_string(color.z) + "}";
-    return str_color;
 }
 
 

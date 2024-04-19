@@ -19,6 +19,9 @@
     <Filter Include="Header Files\GUI">
       <UniqueIdentifier>{6a150478-209a-4b58-b19e-93b2d43b7f64}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\ColorUtils">
+      <UniqueIdentifier>{9b2cba73-7cbd-4b9f-8b3a-2a30b873c4a3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -48,8 +51,11 @@
     <ClCompile Include="..\dependencies\includes\imgui\imgui_impl_opengl3.cpp">
       <Filter>Header Files\imgui</Filter>
     </ClCompile>
+    <ClCompile Include="..\dependencies\includes\stb_image\stb_image.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
     <ClCompile Include="ColorUtils.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files\ColorUtils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -83,11 +89,14 @@
     <ClInclude Include="GUI.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="ColorUtils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Utils.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\dependencies\includes\stb_image\stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorUtils.h">
+      <Filter>Header Files\ColorUtils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

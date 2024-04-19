@@ -142,6 +142,7 @@
     <ClCompile Include="..\dependencies\includes\imgui\imgui_stdlib.cpp" />
     <ClCompile Include="..\dependencies\includes\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\dependencies\includes\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="..\dependencies\includes\stb_image\stb_image.cpp" />
     <ClCompile Include="ColorUtils.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -155,6 +156,7 @@
     <ClInclude Include="..\dependencies\includes\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\dependencies\includes\imgui\imstb_textedit.h" />
     <ClInclude Include="..\dependencies\includes\imgui\imstb_truetype.h" />
+    <ClInclude Include="..\dependencies\includes\stb_image\stb_image.h" />
     <ClInclude Include="ColorUtils.h" />
     <ClInclude Include="GUI.h" />
     <ClInclude Include="Utils.h" />

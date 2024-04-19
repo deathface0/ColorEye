@@ -4,15 +4,29 @@
 #include "Utils.h"
 #include "ColorUtils.h"
 
+namespace Texture
+{
+	inline GLuint clipboard;
+}
+
+namespace Font {
+	namespace OpenSans {
+		inline ImFont* px10, *px20, *px30;
+	}
+}
+
 namespace GUI
 {
 	GLFWwindow* window = nullptr;
 	int windowWidth = 340;
 	int windowHeight = 720;
 
-	ImVec4 rgb255(255, 255, 255, 255), rgb01(1, 1, 1, 1); 
+	Vec3<int> rgb255(255, 255, 255);
+	Vec3<float>rgb01(1, 1, 1);
 	std::string hexColor = "";
-	ImVec4 hsv(0, 0, 0, 0);
+	Vec3<int> hsv(0, 0, 0);
+
+	ImGuiKey key = ImGuiKey_P; std::string bindedMsg = "Binded Key: " + std::to_string(key);
 
 	void Render()
 	{
@@ -30,6 +44,15 @@ namespace GUI
 
 	}
 
+	void clipboardImageButton(std::string id, const std::string& cpy_str)
+	{
+		ImGui::PushID(id.c_str());
+		if (ImGui::ImageButton((void*)(intptr_t)Texture::clipboard, ImVec2((float)20, (float)20), ImVec2(0.0f, 0.0f), ImVec2(1.0f, 1.0f), 1, ImVec4(0.0f, 0.0f, 0.0f, 0.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f))) {
+			Utils::CopyStringToClipboard(cpy_str);
+		}
+		ImGui::PopID();
+	}
+
 	void MainWindow()
 	{
 		ImGui::Begin("Pigeon Client", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse);
@@ -39,29 +62,72 @@ namespace GUI
 		ImVec2 newSize = ImVec2(windowWidth * 1.0f, windowHeight * 1.0f);
 		ImGui::SetWindowSize(newSize);
 
-		rgb01 = ColorUtils::ImVec4To01(rgb255);
-		hexColor = ColorUtils::ImVec4ToHex(rgb01);
-		HSV temp_hsv = ColorUtils::RGBtoHSV(rgb255.x, rgb255.y, rgb255.z); hsv = {temp_hsv.h, temp_hsv.s, temp_hsv.v, 0};
+		ImGui::BeginChild("ColorBox", ImVec2(windowWidth, 320), true);
+
+		rgb01 = ColorUtils::rgb255To01(rgb255);
+		hexColor = ColorUtils::rgb255ToHex(rgb255);
+		hsv.importHSV(ColorUtils::rgb255toHSV(rgb255.x, rgb255.y, rgb255.z));
 
 		ImGui::SetCursorPosX(windowWidth / 2 - 150);
-		if (ImGui::ColorButton("##MyColor", rgb01, ImGuiColorEditFlags_NoDragDrop, ImVec2(300, 300)))
-		{
-			//std::string clip = "{" + std::to_string(color.x) + "," + std::to_string(color.y) + "," + std::to_string(color.z) + "," + std::to_string(color.w) + "}";
-			//Utils::CopyStringToClipboard(clip);
-		}
+		ImGui::SetCursorPosY(320 / 2 - 150);
+		ImGui::ColorButton("##MyColor", rgb01.to_ImVec4(), ImGuiColorEditFlags_NoDragDrop, ImVec2(300, 300));
 
-		if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Enter)))
+		ImGui::EndChild(); //End of ColorBox
+
+		ImGui::BeginChild("InfoBox", ImVec2(windowWidth, windowHeight - 356), true);
+
+		ImGui::PushFont(Font::OpenSans::px30);
+		if (ImGui::IsKeyPressed(ImGui::GetKeyIndex((ImGuiKey)key)))
 		{
 			rgb255 = ColorUtils::getCurrentPixelColor();
 		}
 
-		ImGui::Text("RGB(0-1): %s", ColorUtils::ImVec4ToString(rgb01).c_str());
-		ImGui::Text("RGB(0-255): %s", ColorUtils::ImVec4ToString(rgb255).c_str());
-		ImGui::Text("HEX: {%s}", hexColor);
-		ImGui::Text("HSV: %s", ColorUtils::ImVec4ToString(hsv).c_str());
+		ImGui::SetCursorPosY(10);
+		ImGui::SetCursorPosX(20); ImGui::Text("RGB(0-1): {%s}", rgb01.to_string().c_str()); ImGui::SameLine(); 
+		clipboardImageButton("Clipboard1", rgb01.to_string());
+		ImGui::Dummy(ImVec2(0.0f, 3));
 
-		//ImGui::ShowDemoWindow();
+		ImGui::SetCursorPosX(20); ImGui::Text("RGB(0-255): {%s}", rgb255.to_string().c_str()); ImGui::SameLine();
+		clipboardImageButton("Clipboard2", rgb255.to_string());
+		ImGui::Dummy(ImVec2(0.0f, 3));
+
+		ImGui::SetCursorPosX(20); ImGui::Text("HEX: {%s}", hexColor); ImGui::SameLine();
+		clipboardImageButton("Clipboard3", hexColor);
+		ImGui::Dummy(ImVec2(0.0f, 3));
+
+		ImGui::SetCursorPosX(20); ImGui::Text("HSV: {%s}", hsv.to_string().c_str()); ImGui::SameLine();
+		clipboardImageButton("Clipboard4", hsv.to_string());
 		
+		ImGui::EndChild(); //End of InfoBox
+
+		ImGui::BeginChild("KeyBindBox", ImVec2(windowWidth, 36), true);
+
+		ImGui::PushItemWidth(windowWidth);
+		ImGui::PushFont(Font::OpenSans::px20);
+		ImGui::InputText("##Key", &bindedMsg, ImGuiInputTextFlags_ReadOnly | ImGuiInputTextFlags_NoUndoRedo);
+		if (ImGui::IsItemActive())
+		{
+			bool mouseInput = false;
+			for (int i = 0; i < IM_ARRAYSIZE(ImGui::GetIO().KeysDown); i++) {
+				if (ImGui::IsKeyPressed((ImGuiKey)i)) {
+					for (int key = 655; key <= 659; key++)
+					{
+						if ((ImGuiKey)i == key)
+							mouseInput = true;
+					}
+					if (mouseInput)
+						break;
+
+					key = (ImGuiKey)i;
+					bindedMsg = "Binded Key: " + std::to_string(key);
+					ImGui::SetWindowFocus(NULL);
+					break;
+				}
+			}
+		}
+		
+		ImGui::EndChild(); //End of KeyBindBox
+
 		ImGui::End();
 	}
 }
@@ -137,10 +203,10 @@ namespace ImInit
 		colors[ImGuiCol_ModalWindowDimBg] = ImVec4(1.00f, 0.00f, 0.00f, 0.35f);
 
 		ImGuiStyle& style = ImGui::GetStyle();
-		style.WindowPadding = ImVec2(8.00f, 8.00f);
+		style.WindowPadding = ImVec2(0.00f, 0.00f);
 		style.FramePadding = ImVec2(5.00f, 2.00f);
 		style.CellPadding = ImVec2(6.00f, 6.00f);
-		style.ItemSpacing = ImVec2(6.00f, 6.00f);
+		style.ItemSpacing = ImVec2(0.00f, 0.00f);
 		style.ItemInnerSpacing = ImVec2(6.00f, 6.00f);
 		style.TouchExtraPadding = ImVec2(0.00f, 0.00f);
 		style.IndentSpacing = 25;
@@ -159,6 +225,10 @@ namespace ImInit
 		style.GrabRounding = 3;
 		style.LogSliderDeadzone = 4;
 		style.TabRounding = 4;
+
+		/*ImGui::GetStyle().WindowPadding = ImVec2(0.00f, 0.00f);
+		ImGui::GetStyle().FrameRounding = 0.f;
+		ImGui::GetStyle().ItemSpacing = ImVec2(0.00f, 0.00f);*/
 	}
 
 	void StartImGuiFrame() {
